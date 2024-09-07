@@ -15,40 +15,34 @@ public struct AnimatePlaceholderModifier: AnimatableModifier {
     @Binding var isLoading: Bool
     @State private var isAnim: Bool = false
     private var center = (UIScreen.main.bounds.width / 2) + 110
-    private let animation: Animation = .linear(duration: 1.5)
-
-    // Customizable colors and opacity
-    public var shimmerBaseColor: Color
-    public var shimmerHighlightColor: Color
-    public var shimmerOpacity: Double
+    private var config: ShimmerConfig
 
     // Custom initializer
-    public init(isLoading: Binding<Bool>, shimmerBaseColor: Color = Color.gray, shimmerHighlightColor: Color = Color.white.opacity(0.48), shimmerOpacity: Double = 0.09) {
+    public init(isLoading: Binding<Bool>, config: ShimmerConfig = ShimmerConfig()) {
         self._isLoading = isLoading
-        self.shimmerBaseColor = shimmerBaseColor
-        self.shimmerHighlightColor = shimmerHighlightColor
-        self.shimmerOpacity = shimmerOpacity
+        self.config = config
     }
 
     public func body(content: Content) -> some View {
-        content.overlay(animView.mask(content))
+        // Apply the shimmer effect only when loading is true
+        content.overlay(isLoading ? animView.mask(content) : nil)
     }
 
-    // Shimmer view with custom colors
+    // Shimmer view with custom configuration
     private var animView: some View {
         ZStack {
-            shimmerBaseColor.opacity(isLoading ? shimmerOpacity : 0.0)
+            config.shimmerBaseColor.opacity(isLoading ? config.shimmerOpacity : 0.0)
             Color.white.mask(
                 Rectangle()
                     .fill(
-                        LinearGradient(gradient: Gradient(colors: [.clear, shimmerHighlightColor, .clear]), startPoint: .top, endPoint: .bottom)
+                        LinearGradient(gradient: config.shimmerGradient, startPoint: .top, endPoint: .bottom)
                     )
                     .scaleEffect(1.5)
                     .rotationEffect(.init(degrees: 70.0))
                     .offset(x: isAnim ? center : -center)
             )
         }
-        .animation(isLoading ? animation.repeatForever(autoreverses: false) : nil, value: isAnim)
+        .animation(isLoading ? Animation.linear(duration: config.animationDuration).repeatForever(autoreverses: false) : nil, value: isAnim)
         .onAppear {
             guard isLoading else { return }
             isAnim.toggle()
@@ -62,7 +56,8 @@ public struct AnimatePlaceholderModifier: AnimatableModifier {
 // MARK: - View Extension
 
 public extension View {
-    func animatePlaceholder(isLoading: Binding<Bool>, shimmerBaseColor: Color = Color.gray, shimmerHighlightColor: Color = Color.white.opacity(0.48), shimmerOpacity: Double = 0.09) -> some View {
-        self.modifier(AnimatePlaceholderModifier(isLoading: isLoading, shimmerBaseColor: shimmerBaseColor, shimmerHighlightColor: shimmerHighlightColor, shimmerOpacity: shimmerOpacity))
+    /// Applies a shimmering effect to the view when `isLoading` is true.
+    func animatePlaceholder(isLoading: Binding<Bool>, config: ShimmerConfig = ShimmerConfig()) -> some View {
+        self.modifier(AnimatePlaceholderModifier(isLoading: isLoading, config: config))
     }
 }
