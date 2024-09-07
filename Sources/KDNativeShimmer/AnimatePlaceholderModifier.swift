@@ -58,6 +58,8 @@ public struct AnimatePlaceholderModifier: AnimatableModifier {
 public extension View {
     /// Applies a shimmering effect to the view when `isLoading` is true.
     func animatePlaceholder(isLoading: Binding<Bool>, config: ShimmerConfig = ShimmerConfig()) -> some View {
-        self.modifier(AnimatePlaceholderModifier(isLoading: isLoading, config: config))
+        self
+            .modifier(AnimatePlaceholderModifier(isLoading: isLoading, config: config))
+            .redacted(reason: isLoading.wrappedValue ? .placeholderCircle : nil)
     }
 }
