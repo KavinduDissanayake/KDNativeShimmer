@@ -24,13 +24,10 @@ public struct AnimatePlaceholderModifier: AnimatableModifier {
     }
 
     public func body(content: Content) -> some View {
-           // Apply the shimmer effect only when loading is true, and optionally apply redaction based on configuration
-           content
-               .if(config.shouldRedact && config.redactionReason != nil) { view in
-                   view.redacted(reason: config.redactionReason!)
-               }
-               .overlay(isLoading ? animView.mask(content) : nil)
-       }
+        // Apply the shimmer effect only when loading is true
+        content.overlay(isLoading ? animView.mask(content) : nil)
+    }
+
     // Shimmer view with custom configuration
     private var animView: some View {
         ZStack {
@@ -57,21 +54,12 @@ public struct AnimatePlaceholderModifier: AnimatableModifier {
 }
 
 // MARK: - View Extension
-extension View {
-    /// Conditional modifier: Applies the given modifier only when the condition is true.
-    @ViewBuilder func `if`<Content: View>(_ condition: Bool, apply: (Self) -> Content) -> some View {
-        if condition {
-            apply(self)
-        } else {
-            self
-        }
-    }
-}
 
 public extension View {
-    /// Applies a shimmering effect to the view when `isLoading` is true, with options for redaction.
+    /// Applies a shimmering effect to the view when `isLoading` is true.
     func animatePlaceholder(isLoading: Binding<Bool>, config: ShimmerConfig = ShimmerConfig()) -> some View {
-        self.modifier(AnimatePlaceholderModifier(isLoading: isLoading, config: config))
+        self
+            .modifier(AnimatePlaceholderModifier(isLoading: isLoading, config: config))
+            .redacted(reason: isLoading.wrappedValue ? .placeholderCircle : nil)
     }
 }
-
