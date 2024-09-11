@@ -1,13 +1,10 @@
-// swift-tools-version: 5.10
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
 // swift-tools-version:5.5
 import PackageDescription
 
 let package = Package(
     name: "KDNativeShimmer",
     platforms: [
-        .iOS(.v15),  // Ensure you're targeting iOS 15 or higher
+        .iOS(.v15) // Support for iOS 15 and above
     ],
     products: [
         .library(
@@ -27,5 +24,6 @@ let package = Package(
             dependencies: ["KDNativeShimmer"],
             path: "Tests"
         )
-    ]
+    ],
+    swiftLanguageVersions: [.v5] // This ensures compatibility with Swift 5.x versions
 )
