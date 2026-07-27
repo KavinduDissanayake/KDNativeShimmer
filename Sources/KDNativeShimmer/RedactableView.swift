@@ -109,3 +109,10 @@ extension View {
   }
 }
 
+public extension View {
+  func shimmerRedacted(reason: RedactionReason?) -> some View {
+      self
+        .modifier(RedactableView(reason: reason))
+  }
+}
+
