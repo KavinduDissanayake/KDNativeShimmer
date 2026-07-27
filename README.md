@@ -56,7 +56,23 @@ To apply the shimmer effect to any view, follow these steps:
 
 ### Customization
 
-`KDNativeShimmer` allows you to customize the shimmer effect using the `ShimmerConfig` class. You can modify the base color, highlight color, opacity, gradient, animation duration, and more.
+`KDNativeShimmer` allows you to customize the shimmer effect using the `ShimmerConfig` class. You can modify the base color, highlight color, opacity, gradient, animation duration, direction, delay, and redaction reason.
+
+### Configuration Properties
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `shimmerBaseColor` | `Color` | `.gray` | The base background color of the shimmer block. |
+| `shimmerHighlightColor` | `Color` | `.white.opacity(0.48)` | The highlight gradient tint color. |
+| `shimmerOpacity` | `Double` | `0.09` | The opacity of the base background. |
+| `animationDuration` | `Double` | `1.5` | Duration of one shimmer cycle in seconds. |
+| `shimmerGradient` | `Gradient` | Linear clear-white-clear | The gradient pattern of the highlight. |
+| `shouldRedact` | `Bool` | `true` | Apply content masking and redaction to the host view. |
+| `shimmerDirection` | `ShimmerDirection` | `.leftToRight` | Shimmer movement direction (`.leftToRight`, `.rightToLeft`, `.topToBottom`, `.bottomToTop`). |
+| `shimmerDelay` | `Double` | `0.0` | Pause duration in seconds between animation loops. |
+| `redactionReason` | `RedactionReason` | `.placeholderCircle` | Type of content redaction (`.placeholder`, `.placeholderCircle`, `.confidential`, `.blurred`). |
+
+### Basic Customization
 
 1. **Create a `ShimmerConfig` object**:
     ```swift
@@ -84,25 +100,24 @@ To apply the shimmer effect to any view, follow these steps:
     }
     ```
 
-### Advanced Customization
+### Advanced Customization (New Features)
 
-You can fully customize the shimmer effect by setting the gradient, opacity, colors, and duration to fit your app's design.
+You can specify the movement direction, add loop delays, or toggle custom content redactions:
 
 ```swift
-let advancedShimmerConfig = ShimmerConfig(
-    shimmerBaseColor: Color.gray,
-    shimmerHighlightColor: Color.yellow.opacity(0.4),
-    shimmerOpacity: 0.1,
-    animationDuration: 1.0,
-    shimmerGradient: Gradient(colors: [.clear, .white, .clear])
+let customShimmerConfig = ShimmerConfig(
+    shimmerDirection: .topToBottom,    // Moves from top to bottom
+    shimmerDelay: 1.0,                 // Pauses for 1 second between sweeps
+    shouldRedact: true,                // Redacts the original content
+    redactionReason: .blurred          // Applies a blur redaction overlay
 )
 ```
 
-Then apply this configuration as usual:
+Then apply this configuration:
 
 ```swift
 Text("Advanced Shimmer")
-    .animatePlaceholder(isLoading: .constant(true), config: advancedShimmerConfig)
+    .animatePlaceholder(isLoading: .constant(true), config: customShimmerConfig)
     .frame(height: 20)
 ```
 

@@ -4,7 +4,8 @@ import PackageDescription
 let package = Package(
     name: "KDNativeShimmer",
     platforms: [
-        .iOS(.v15) // Support for iOS 15 and above
+        .iOS(.v15), // Support for iOS 15 and above
+        .macOS(.v12)
     ],
     products: [
         .library(
@@ -17,7 +18,8 @@ let package = Package(
         .target(
             name: "KDNativeShimmer",
             dependencies: [],
-            path: "Sources"
+            path: "Sources",
+            exclude: ["Ss"]
         ),
         .testTarget(
             name: "KDNativeShimmerTests",
