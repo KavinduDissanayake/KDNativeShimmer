@@ -1,7 +1,5 @@
 # KDNativeShimmer
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
-
 `KDNativeShimmer` is a highly customizable shimmer effect library for iOS apps using SwiftUI. It allows you to easily add shimmering placeholders to your views while loading content, giving your app a polished and engaging loading experience.
 
 ## Requirements
