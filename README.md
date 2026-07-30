@@ -5,180 +5,125 @@
 ![SPM](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)
 [![Release](https://img.shields.io/github/v/tag/KavinduDissanayake/KDNativeShimmer?label=release)](https://github.com/KavinduDissanayake/KDNativeShimmer/releases)
 
-`KDNativeShimmer` is a highly customizable shimmer effect library for iOS apps using SwiftUI. It allows you to easily add shimmering placeholders to your views while loading content, giving your app a polished and engaging loading experience.
+**KDNativeShimmer** is a highly customizable, lightweight, and performance-optimized shimmer skeleton loading effect library for SwiftUI. It helps developers easily add polished, engaging loading placeholders to any view hierarchy while content is fetching, significantly improving perceived performance and app aesthetics.
+
+---
+
+## Features
+
+*   🚀 **Performance-Optimized Rendering** — Uses core SwiftUI animation loops for smooth transitions with zero main-thread lag.
+*   🎨 **Full Color & Gradient Customization** — Modify the base background color, highlight color, opacity, gradient layout, and animation durations.
+*   🔄 **Flexible Directional Sweeps** — Animate shim sweeps in four directions: `.leftToRight`, `.rightToLeft`, `.topToBottom`, and `.bottomToTop`.
+*   🎭 **Native Content Redactions** — Built-in masking overlays that match SwiftUI's redaction logic (`.placeholder`, `.placeholderCircle`, `.confidential`, `.blurred`).
+*   ⏱ **Configurable Loop Delays** — Set a precise pause duration between animation loops to create sophisticated, staggered layout sweeps.
+
+---
 
 ## Requirements
-* iOS 15+
-* Xcode 12+
-* Swift 5.5+
+
+| Metric | Target |
+|---|---|
+| **iOS** | 15.0+ |
+| **macOS** | 12.0+ |
+| **Xcode** | 12.0+ |
+| **Swift** | 5.5+ |
+
+---
 
 ## Installation
 
-### Swift Package Manager (SPM)
+### Xcode Integration
+1. Go to `File` > `Add Packages...`
+2. Enter the repository URL: `https://github.com/KavinduDissanayake/KDNativeShimmer`
+3. Select your version rules (recommended version: `1.2.0` or higher).
 
-To integrate `KDNativeShimmer` into your project using Swift Package Manager, add the following line to your `Package.swift` file:
+### Package.swift
+Add `KDNativeShimmer` as a dependency inside your project's `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/KavinduDissanayake/KDNativeShimmer", from: "1.1.0")
+    .package(url: "https://github.com/KavinduDissanayake/KDNativeShimmer", from: "1.2.0")
 ]
 ```
 
-Alternatively, you can add the package through Xcode:
-1. Open your project in Xcode.
-2. Go to `File` > `Swift Packages` > `Add Package Dependency...`
-3. Enter the URL `https://github.com/KavinduDissanayake/KDNativeShimmer` and follow the instructions.
+---
 
 ## Usage
 
-### Basic Usage
-
-To apply the shimmer effect to any view, follow these steps:
-
-1. **Import `KDNativeShimmer`**:
-    ```swift
-    import SwiftUI
-    import KDNativeShimmer
-    ```
-
-2. **Apply the shimmer effect using `animatePlaceholder`**:
-    ```swift
-    var body: some View {
-        VStack {
-            Text("Loading...")
-                .animatePlaceholder(isLoading: .constant(true))
-                .frame(height: 20)
-            
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.gray.opacity(0.3))
-                .frame(height: 150)
-                .animatePlaceholder(isLoading: .constant(true))
-        }
-    }
-    ```
-
-### Customization
-
-`KDNativeShimmer` allows you to customize the shimmer effect using the `ShimmerConfig` class. You can modify the base color, highlight color, opacity, gradient, animation duration, direction, delay, and redaction reason.
-
-### Configuration Properties
-
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `shimmerBaseColor` | `Color` | `.gray` | The base background color of the shimmer block. |
-| `shimmerHighlightColor` | `Color` | `.white.opacity(0.48)` | The highlight gradient tint color. |
-| `shimmerOpacity` | `Double` | `0.09` | The opacity of the base background. |
-| `animationDuration` | `Double` | `1.5` | Duration of one shimmer cycle in seconds. |
-| `shimmerGradient` | `Gradient` | Linear clear-white-clear | The gradient pattern of the highlight. |
-| `shouldRedact` | `Bool` | `true` | Apply content masking and redaction to the host view. |
-| `shimmerDirection` | `ShimmerDirection` | `.leftToRight` | Shimmer movement direction (`.leftToRight`, `.rightToLeft`, `.topToBottom`, `.bottomToTop`). |
-| `shimmerDelay` | `Double` | `0.0` | Pause duration in seconds between animation loops. |
-| `redactionReason` | `RedactionReason` | `.placeholderCircle` | Type of content redaction (`.placeholder`, `.placeholderCircle`, `.confidential`, `.blurred`). |
-
-### Basic Customization
-
-1. **Create a `ShimmerConfig` object**:
-    ```swift
-    let shimmerConfig = ShimmerConfig(
-        shimmerBaseColor: Color(hex: "#C9C9C9"),
-        shimmerHighlightColor: Color.blue.opacity(0.5),
-        shimmerOpacity: 0.15,
-        animationDuration: 2.0
-    )
-    ```
-
-2. **Apply the custom configuration to the shimmer**:
-    ```swift
-    var body: some View {
-        VStack {
-            Text("Loading custom shimmer...")
-                .animatePlaceholder(isLoading: .constant(true), config: shimmerConfig)
-                .frame(height: 20)
-            
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.gray.opacity(0.3))
-                .frame(height: 150)
-                .animatePlaceholder(isLoading: .constant(true), config: shimmerConfig)
-        }
-    }
-    ```
-
-### Advanced Customization (New Features)
-
-You can specify the movement direction, add loop delays, or toggle custom content redactions:
-
-```swift
-let customShimmerConfig = ShimmerConfig(
-    shimmerDirection: .topToBottom,    // Moves from top to bottom
-    shimmerDelay: 1.0,                 // Pauses for 1 second between sweeps
-    shouldRedact: true,                // Redacts the original content
-    redactionReason: .blurred          // Applies a blur redaction overlay
-)
-```
-
-Then apply this configuration:
-
-```swift
-Text("Advanced Shimmer")
-    .animatePlaceholder(isLoading: .constant(true), config: customShimmerConfig)
-    .frame(height: 20)
-```
-
-### Example
-
-Here is a full example showing how to use both default and customized shimmer effects:
+### 1. Basic Usage
+Import the package and use the `.animatePlaceholder(isLoading:)` modifier directly on any SwiftUI view:
 
 ```swift
 import SwiftUI
 import KDNativeShimmer
 
-struct ContentView: View {
-    var shimmerConfig = ShimmerConfig(
-        shimmerBaseColor: Color(hex: "#C9C9C9"),
-        shimmerHighlightColor: Color.blue.opacity(0.5),
-        shimmerOpacity: 0.15,
-        animationDuration: 2.0
-    )
-    
-    var body: some View {
-        VStack {
-            // Using default shimmer effect
-            Text("Default Shimmer")
-                .animatePlaceholder(isLoading: .constant(true))
-                .frame(height: 20)
-            
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.gray.opacity(0.3))
-                .frame(height: 150)
-                .animatePlaceholder(isLoading: .constant(true))
+struct LoadingView: View {
+    @State private var isFetching = true
 
-            Spacer().frame(height: 40)
-            
-            // Using custom shimmer effect
-            Text("Custom Shimmer")
-                .animatePlaceholder(isLoading: .constant(true), config: shimmerConfig)
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("Loading user profile...")
+                .animatePlaceholder(isLoading: $isFetching)
                 .frame(height: 20)
             
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.gray.opacity(0.3))
-                .frame(height: 150)
-                .animatePlaceholder(isLoading: .constant(true), config: shimmerConfig)
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.gray.opacity(0.1))
+                .frame(height: 120)
+                .animatePlaceholder(isLoading: $isFetching)
         }
         .padding()
     }
 }
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
 ```
 
-#### Cover Image
-<img align="center" src="https://github.com/KavinduDissanayake/KDNativeShimmer/blob/main/Sources/Ss/ss.png">
+### 2. Custom Configuration
+You can customize the animation duration, delay, direction, colors, and masking using `ShimmerConfig`:
+
+```swift
+let customConfig = ShimmerConfig(
+    shimmerBaseColor: Color.blue.opacity(0.1),
+    shimmerHighlightColor: Color.white.opacity(0.6),
+    shimmerOpacity: 0.2,
+    animationDuration: 1.8,
+    shimmerDirection: .topToBottom,
+    shimmerDelay: 0.8,
+    shouldRedact: true,
+    redactionReason: .blurred
+)
+
+// Applying custom settings to your views
+Text("Fetching data...")
+    .animatePlaceholder(isLoading: .constant(true), config: customConfig)
+```
+
+---
+
+## Configuration Properties
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `shimmerBaseColor` | `Color` | `.gray` | The base background color of the shimmer skeleton block. |
+| `shimmerHighlightColor` | `Color` | `.white.opacity(0.48)` | The highlight gradient tint color. |
+| `shimmerOpacity` | `Double` | `0.09` | The opacity of the base background layer. |
+| `animationDuration` | `Double` | `1.5` | Duration of one shimmer cycle in seconds. |
+| `shimmerGradient` | `Gradient` | Linear clear-white-clear | The gradient pattern of the moving highlight. |
+| `shouldRedact` | `Bool` | `true` | Apply content masking and redaction to the host view. |
+| `shimmerDirection` | `ShimmerDirection` | `.leftToRight` | Shimmer movement direction (`.leftToRight`, `.rightToLeft`, `.topToBottom`, `.bottomToTop`). |
+| `shimmerDelay` | `Double` | `0.0` | Pause duration in seconds between animation loops. |
+| `redactionReason` | `RedactionReason` | `.placeholderCircle` | Type of content redaction (`.placeholder`, `.placeholderCircle`, `.confidential`, `.blurred`). |
+
+---
+
+## Preview
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/KavinduDissanayake/KDNativeShimmer/main/Sources/Ss/ss.png" width="480" alt="KDNativeShimmer Loading Effect Demo" />
+</p>
+
+---
 
 ## License
 
-Kavindu Dissanayake
+Released under the MIT License. See [LICENSE](LICENSE) for details.
 
+Copyright (c) 2026 Kavindu Dissanayake.
